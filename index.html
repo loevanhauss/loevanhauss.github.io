@@ -323,7 +323,18 @@
     }
 
     .projet-visual { position: relative; aspect-ratio: 16/9; overflow: hidden; background: #060412; }
-
+    .thisIsFine-visual {
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .projet-gif {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: inherit;
+    }
     .kaboom-visual {
       display: flex; align-items: center; justify-content: center;
       background: radial-gradient(circle at 50% 62%, #b04a2f33, #060412 70%);
@@ -541,6 +552,31 @@
 <!-- PROJETS -->
 <section id="projets">
   <div class="section-header reveal"><h2>Projets</h2></div>
+
+  <div class="projet-card reveal">
+    <div>
+      <p class="projet-tag">3D Game · Enjam 2026</p>
+      <h3>This is Fine</h3>
+      <p>C’est la dernière semaine de l’Apocalypse, et le monde est en proie aux flammes. Vous avez une préoccupation bien précise en tête : prendre soin de votre jardin. Chaque jour, faites votre choix parmi vos ressources et occupez-vous de vos plantes. À la fin de la semaine, vous pourriez même obtenir de magnifiques fleurs !</p>
+      <div class="tags">
+        <span class="tag">Cozy Game</span>
+        <span class="tag">3D</span>
+        <span class="tag">Low Poly</span>
+        <span class="tag">Enjam 2026</span>
+      </div>
+      <a href="https://andrew-williams.itch.io/all-is-fine" target="_blank" class="btn">Jouer sur itch.io →</a>
+      <button class="process-toggle" aria-expanded="false" data-target="process-kaboom">
+        <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        Mon processus de création
+      </button>
+      <div class="process-panel" id="process-kaboom">
+        <p>Tout d'abord nous avons brainstormer sur le sujet de la jam qui etait "A thing of beauty I know will never fade away", ensuite nous avons commenceer a ce répartir le travaille ainsi qu'as commencer les fonctionnalité de base tel que le mouvement ou les differentes items. Puis j'ai commencer a faire les interactions entre les items et bug fixes quelques trucs</p>
+      </div>
+    </div>
+   <div class="projet-visual thisIsFine-visual">
+      <img src="images/ThisIsFine.gif" alt="Aperçu du jeu This is Fine : un jardin en flammes" class="projet-gif" loading="lazy">
+    </div>
+  </div>
 
   <div class="projet-card reveal">
     <div>
