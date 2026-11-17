@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projets techniques — Loëvan HAUSSARD</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0d0b10;
+      --paper: #f4efe6;
+      --gold: #c9a84c;
+      --rust: #b04a2f;
+      --dusk: #1c1628;
+      --mist: #8c9bb5;
+      --glow: #e8c97a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Lora', Georgia, serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* grain */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1000; opacity: 0.35;
+    }
+
+    /* fond « plan technique » : grille fine qui s'estompe vers le bas */
+    body::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 90vh;
+      background-image:
+        linear-gradient(#c9a84c12 1px, transparent 1px),
+        linear-gradient(90deg, #c9a84c12 1px, transparent 1px);
+      background-size: 48px 48px;
+      -webkit-mask-image: linear-gradient(to bottom, #000 20%, transparent);
+              mask-image: linear-gradient(to bottom, #000 20%, transparent);
+      pointer-events: none; z-index: 0;
+    }
+
+    a:focus-visible, .btn:focus-visible, video:focus-visible {
+      outline: 2px solid var(--glow); outline-offset: 3px;
+    }
+
+    /* BOUTONS (identiques à l'accueil) */
+    .btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.14em;
+      padding: 0.9rem 2.2rem; text-decoration: none;
+      border: 1px solid var(--gold); color: var(--gold);
+      background: transparent; display: inline-block;
+      transition: color 0.3s; position: relative; overflow: hidden;
+    }
+    .btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s ease; z-index: -1;
+    }
+    .btn:hover::before { transform: scaleX(1); }
+    .btn:hover { color: var(--ink); }
+    .btn-ghost { border-color: #ffffff20; color: var(--mist); }
+    .btn-ghost::before { background: #ffffff10; }
+    .btn-ghost:hover { color: var(--paper); }
+
+    /* EN-TÊTE */
+    .page-head {
+      position: relative; z-index: 1;
+      padding: 3rem 8vw 5rem;
+    }
+    .back {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.18em;
+      color: var(--mist); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.7rem;
+      transition: color 0.3s;
+    }
+    .back:hover { color: var(--gold); }
+    .back span { display: inline-block; transition: transform 0.3s; }
+    .back:hover span { transform: translateX(-4px); }
+
+    .page-head h1 {
+      margin-top: 5rem;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2.2rem, 6vw, 4.6rem);
+      line-height: 1.05; font-weight: 700;
+      max-width: 800px;
+      opacity: 0; animation: fadeUp 0.9s 0.2s forwards;
+    }
+    .page-head h1 em { font-style: normal; color: var(--gold); display: block; }
+    .page-head .intro {
+      margin-top: 1.6rem; max-width: 520px;
+      color: var(--mist); line-height: 1.8; font-size: 1.02rem;
+      opacity: 0; animation: fadeUp 0.9s 0.4s forwards;
+    }
+
+    /* ENTRÉES : une par sujet, vidéo en grand puis texte + fiche */
+    .lab { position: relative; z-index: 1; padding: 0 8vw 6rem; }
+
+    .entry {
+      border-top: 1px solid #c9a84c22;
+      padding-top: 3.5rem;
+      margin-bottom: 6rem;
+    }
+    .entry:last-child { margin-bottom: 0; }
+
+    .entry-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 2rem; flex-wrap: wrap; margin-bottom: 2.5rem;
+    }
+    .entry-head h2 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+      color: var(--paper); line-height: 1.2;
+    }
+    .entry-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.66rem; letter-spacing: 0.22em;
+      color: var(--rust); text-transform: uppercase;
+    }
+
+    /* vidéos */
+    .videos { display: grid; gap: 1.5rem; margin-bottom: 3rem; }
+    .videos.two { grid-template-columns: 1fr 1fr; }
+
+    figure.demo { display: block; }
+    .demo-frame {
+      border: 1px solid #c9a84c28;
+      background: #060412;
+      padding: 6px;
+      transition: border-color 0.4s;
+    }
+    .demo:hover .demo-frame { border-color: #c9a84c55; }
+    .demo video {
+      display: block; width: 100%; height: auto;
+      background: #060412;
+    }
+    .demo figcaption {
+      margin-top: 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.66rem; letter-spacing: 0.1em;
+      color: var(--mist);
+    }
+    .demo figcaption b { color: var(--gold); font-weight: 400; }
+
+    /* texte + fiche technique */
+    .entry-body {
+      display: grid; grid-template-columns: 1.4fr 1fr;
+      gap: 4rem; align-items: start;
+    }
+    .entry-text p {
+      color: #9a96b8; line-height: 1.95; font-size: 0.97rem;
+      max-width: 62ch;
+    }
+    .entry-text p + p { margin-top: 1.2rem; }
+
+    .spec {
+      border-left: 2px solid #c9a84c40;
+      padding-left: 1.5rem;
+      display: grid; gap: 1.1rem;
+    }
+    .spec dt {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.2em;
+      color: var(--gold); text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+    .spec dd { color: var(--mist); font-size: 0.92rem; line-height: 1.6; }
+
+    /* CONTACT / RETOUR */
+    .bottom {
+      position: relative; z-index: 1;
+      padding: 4rem 8vw 6rem; text-align: center;
+      border-top: 1px solid #c9a84c15;
+    }
+    .bottom p { color: var(--mist); margin-bottom: 2rem; }
+
+    footer {
+      position: relative; z-index: 1; padding: 2rem 8vw;
+      border-top: 1px solid #c9a84c15;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.1em; color: #3e3a55;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.85s ease, transform 0.85s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      .videos.two { grid-template-columns: 1fr; }
+      .entry-body { grid-template-columns: 1fr; gap: 2.5rem; }
+      .page-head h1 { margin-top: 3rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .page-head h1, .page-head .intro { animation: none; opacity: 1; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-head">
+    <a href="index.html" class="back"><span>←</span> Retour au portfolio</a>
+    <h1>Projets<em>techniques</em></h1>
+    <p class="intro">Des tests et des expérimentations sur ce qui se passe sous le capot d'un jeu : comment un personnage trouve son chemin, et comment un moteur évite d'afficher ce que personne ne voit.</p>
+  </header>
+
+  <main class="lab">
+
+    <!-- PATHFINDING -->
+    <section class="entry reveal" id="pathfinding">
+      <div class="entry-head">
+        <h2>Pathfinding</h2>
+        <p class="entry-tag">Programmation · IA</p>
+      </div>
+
+      <div class="videos two">
+        <figure class="demo">
+          <div class="demo-frame">
+            <video controls preload="metadata" playsinline>
+              <source src="videos/PathFindingTest.mp4" type="video/mp4" />
+              Ton navigateur ne peut pas lire cette vidéo.
+            </video>
+          </div>
+          <figcaption><b>Test 1</b> · recherche d'un chemin vers la cible</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <div class="demo-frame">
+            <video controls preload="metadata" playsinline>
+              <source src="videos/PathFindingTest2.mp4" type="video/mp4" />
+              Ton navigateur ne peut pas lire cette vidéo.
+            </video>
+          </div>
+          <figcaption><b>Test 2</b> · autre configuration de la scène</figcaption>
+        </figure>
+      </div>
+
+      <div class="entry-body">
+        <div class="entry-text">
+          <p>J'ai codé un système de pathfinding en suivant un tutoriel, pour comprendre comment un agent calcule un chemin à travers une scène en évitant les obstacles.</p>
+          <p>Les deux vidéos montrent le résultat dans deux configurations différentes. Refaire le code pas à pas m'a permis de comprendre la logique de l'algorithme plutôt que d'utiliser une solution toute faite.</p>
+        </div>
+        <dl class="spec">
+          <div><dt>Réalisation</dt><dd>Codé par mes soins à partir d'un tutoriel</dd></div>
+          <div><dt>Objectif</dt><dd>Comprendre le fonctionnement d'un algorithme de recherche de chemin</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- CULLING -->
+    <section class="entry reveal" id="culling">
+      <div class="entry-head">
+        <h2>Culling</h2>
+        <p class="entry-tag">Optimisation · Unity</p>
+      </div>
+
+      <div class="videos">
+        <figure class="demo">
+          <div class="demo-frame">
+            <video controls preload="metadata" playsinline>
+              <source src="videos/CullingTest.mp4" type="video/mp4" />
+              Ton navigateur ne peut pas lire cette vidéo.
+            </video>
+          </div>
+          <figcaption><b>Test</b> · culling de Unity en action</figcaption>
+        </figure>
+      </div>
+
+      <div class="entry-body">
+        <div class="entry-text">
+          <p>Le culling consiste à ne pas dessiner les objets que la caméra ne peut pas voir, pour alléger le travail de la carte graphique.</p>
+          <p>Ici, j'ai testé le système de culling intégré à Unity pour observer son effet dans une scène : les objets sortent ou entrent dans le rendu selon ce que la caméra voit.</p>
+        </div>
+        <dl class="spec">
+          <div><dt>Outil</dt><dd>Unity</dd></div>
+          <div><dt>Approche</dt><dd>Test du culling intégré au moteur</dd></div>
+          <div><dt>Objectif</dt><dd>Réduire le nombre d'objets rendus à l'écran</dd></div>
+        </dl>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="bottom">
+    <p>Envie de voir des jeux plutôt que du code ?</p>
+    <a href="index.html#projets" class="btn">← Voir mes projets de jeux</a>
+  </div>
+
+  <footer>
+    <span>Loëvan HAUSSARD</span>
+    <span>CNAM ENJMIN</span>
+  </footer>
+
+  <script>
+    // apparition douce des sections au défilement
+    const items = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.08 });
+      items.forEach(el => io.observe(el));
+    } else {
+      items.forEach(el => el.classList.add('visible'));
+    }
+
+    // une seule vidéo à la fois
+    const vids = document.querySelectorAll('video');
+    vids.forEach(v => v.addEventListener('play', () => {
+      vids.forEach(o => { if (o !== v) o.pause(); });
+    }));
+  </script>
+</body>
+</html>
