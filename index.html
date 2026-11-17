@@ -197,19 +197,32 @@
       text-anchor: middle; dominant-baseline: middle;
     }
     .hex-data {
-        fill: var(--accent, #7c5cff);
-        fill-opacity: 0.25;
-        stroke: var(--accent, #7c5cff);
-        stroke-width: 2;
-        stroke-linejoin: round;
-      }
-      .hex-data-dot {
-        fill: var(--accent, #7c5cff);
-      }
-      .hs-pct {
-        fill: var(--accent, #7c5cff);
-        font-weight: 600;
-      }
+      fill: var(--gold);
+      fill-opacity: 0.18;
+      stroke: var(--gold);
+      stroke-width: 2;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 8px #c9a84c66);
+    }
+    .hex-data-dot {
+      fill: var(--glow);
+      stroke: var(--ink);
+      stroke-width: 1.5;
+    }
+    .hs-pct {
+      fill: var(--glow);
+      font-weight: 700;
+    }
+    .hex-data, .hex-data-dot {
+      transform-box: view-box;
+      transform-origin: 320px 290px;
+      transform: scale(0);
+      transition: transform 1s cubic-bezier(.2,.8,.2,1) 0.3s;
+    }
+    .hardskills.visible .hex-data,
+    .hardskills.visible .hex-data-dot {
+      transform: scale(1);
+    }
     .hs-node { cursor: default; }
     .hs-node-circle {
       fill: var(--ink);
